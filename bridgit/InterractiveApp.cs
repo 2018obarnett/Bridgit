@@ -421,6 +421,40 @@ public class InterractiveApp
         */                
     }
 
+    public static string BidDealReturnState(Game game)
+    {
+        List<string> bids = new List<string>();
+
+        var bs = new BiddingState(game);
+        while (!bs.Contract.AuctionComplete)
+        {
+            var choices = bs.GetCallChoices();
+            var callDetails = choices.BestCall;
+            if (callDetails == null)
+            {
+                choices = bs.DEBUG_ReEvaluateCallChoices();
+                callDetails = choices.BestCall;
+                if (callDetails == null)
+                {
+                    if (choices.ContainsKey(Call.Pass))
+                    {
+                        callDetails = choices[Call.Pass];
+                    }
+                    else
+                    {
+                        choices.AddPassRule();
+                        callDetails = choices[Call.Pass];
+                    }
+                }
+            }
+            bids.Add($"{bs.NextToAct.Direction}: {callDetails.Call}");
+            bs.MakeCall(callDetails);
+        }
+        //DisplayBiddingState(bs);
+        return string.Join(", ", bids.ToArray());
+    }
+
+
     private static void DisplayBiddingState(BiddingState bs)
     {
         Display.Game(bs.Game);
