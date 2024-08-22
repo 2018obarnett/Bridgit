@@ -36,5 +36,14 @@ namespace BridgeBidderAPI
 
             return new OkObjectResult(bids);
         }
+
+        public string RunWithString(string deal)
+        {
+            var vulnerableOption = Vulnerable.None;
+
+            string bids = InterractiveApp.BidDealReturnState(Game.Parse(deal, vulnerableOption.ToString()));
+
+            return (bids);
+        }
     }
 }

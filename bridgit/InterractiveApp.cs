@@ -421,7 +421,7 @@ public class InterractiveApp
         */                
     }
 
-    public static string BidDealReturnState(Game game)
+    public static string BidDealReturnState(Game game, bool verbose=false)
     {
         List<string> bids = new List<string>();
 
@@ -448,8 +448,30 @@ public class InterractiveApp
                 }
             }
             bids.Add($"{bs.NextToAct.Direction}: {callDetails.Call}");
+            if(verbose)
+            {
+                Console.WriteLine($"{bs.NextToAct.Direction}: {callDetails.Call}");
+                foreach (var a in callDetails.Annotations)
+                {
+                    Console.WriteLine($"   {a.Type}: {a.Text}");
+                }
+                var desc = callDetails.GetCallDescriptions();
+                foreach (var descList in desc)
+                {
+                    var description = string.Join(", ", descList);
+                    Console.WriteLine($"      {description}");
+                }
+            }
             bs.MakeCall(callDetails);
         }
+
+        if (verbose)
+        {
+            DisplayBiddingState(bs);
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
         //DisplayBiddingState(bs);
         return string.Join(", ", bids.ToArray());
     }

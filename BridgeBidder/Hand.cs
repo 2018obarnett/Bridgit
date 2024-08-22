@@ -12,26 +12,36 @@ namespace BridgeBidding
 		public Hand() : base() {}
 		public Hand(IEnumerable<Card> cards) : base(cards) {}
 
-		public int HighCardPoints(Suit? suit = null)
+		public double AcePoints { get; set; } = 4;
+        public double KingPoints { get; set; } = 3;
+        public double QueenPoints { get; set; } = 2;
+        public double JackPoints { get; set; } = 1;
+        public double TenPoints { get; set; } = 0;
+
+        public int HighCardPoints(Suit? suit = null)
 		{
-			var highCardPoints = 0;
+			double highCardPoints = 0;
 
 			if (suit == null)
 			{
 				//  basic points for high cards
-				highCardPoints += this.Count(c => c.Rank == Rank.Ace) * 4;
-				highCardPoints += this.Count(c => c.Rank == Rank.King) * 3;
-				highCardPoints += this.Count(c => c.Rank == Rank.Queen) * 2;
-				highCardPoints += this.Count(c => c.Rank == Rank.Jack);
-			} 
+				highCardPoints += this.Count(c => c.Rank == Rank.Ace) * AcePoints;
+				highCardPoints += this.Count(c => c.Rank == Rank.King) * KingPoints;
+				highCardPoints += this.Count(c => c.Rank == Rank.Queen) * QueenPoints;
+                highCardPoints += this.Count(c => c.Rank == Rank.Jack) * JackPoints;
+                highCardPoints += this.Count(c => c.Rank == Rank.Ten) * TenPoints;
+            } 
 			else
 			{
-				highCardPoints += this.Count(c => (c.Rank == Rank.Ace && c.Suit == suit)) * 4;
-				highCardPoints += this.Count(c => (c.Rank == Rank.King && c.Suit == suit)) * 3;
-				highCardPoints += this.Count(c => (c.Rank == Rank.Queen && c.Suit == suit)) * 2;
-				highCardPoints += this.Count(c => (c.Rank == Rank.Jack && c.Suit == suit));
-			}
-			return highCardPoints;
+				highCardPoints += this.Count(c => (c.Rank == Rank.Ace && c.Suit == suit)) * AcePoints;
+				highCardPoints += this.Count(c => (c.Rank == Rank.King && c.Suit == suit)) * KingPoints;
+				highCardPoints += this.Count(c => (c.Rank == Rank.Queen && c.Suit == suit)) * QueenPoints;
+				highCardPoints += this.Count(c => (c.Rank == Rank.Jack && c.Suit == suit)) * JackPoints;
+                highCardPoints += this.Count(c => (c.Rank == Rank.Ten && c.Suit == suit)) * TenPoints;
+
+            }
+
+            return Convert.ToInt32(highCardPoints);
 		}
 
 		public int LengthPoints()
